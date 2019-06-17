@@ -26,4 +26,6 @@ class LoginFailure extends LoginState {
 
 class LoginSuccess extends LoginState{
 
+  @override
+  String toString() => 'LoginSuccess';
 }
