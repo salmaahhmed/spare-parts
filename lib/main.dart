@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sparepart/bloc/authentication/authentication_bloc.dart';
 import 'package:sparepart/bloc/authentication/authentication_event.dart';
 import 'package:sparepart/bloc/authentication/authentication_state.dart';
+import 'package:sparepart/bloc/category_products/category_products_bloc.dart';
 import 'package:sparepart/bloc/spare_part_category/category_bloc.dart';
 import 'package:sparepart/data/parse_keys.dart';
 import 'package:sparepart/data/remote_provider/category_api_provider.dart';
@@ -70,6 +71,7 @@ class App extends StatelessWidget {
     final auth = AuthenticationBloc(
         supplierRepository: SupplierRepoImplementation(SupplierApiProvider()));
     return MaterialApp(
+      theme: ThemeData(accentColor: Colors.orange, primaryColor: Colors.black),
       home: BlocProviderTree(
         blocProviders: [
           BlocProvider<AuthenticationBloc>(
@@ -79,12 +81,17 @@ class App extends StatelessWidget {
             builder: (BuildContext context) =>
                 CategoryBloc(CategoryRepoImplementation(CategoryApiProvider())),
           ),
+          BlocProvider<CategoryProductBloc>(
+            builder: (BuildContext context) => CategoryProductBloc(
+                CategoryRepoImplementation(CategoryApiProvider())),
+          ),
         ],
         child: BlocBuilder<AuthenticationEvent, AuthenticationState>(
           bloc: auth..dispatch(AppStarted()),
           builder: (BuildContext context, AuthenticationState state) {
             if (state is AuthenticationUninitialized) {
-              return Center(child: CircularProgressIndicator());
+              return Container(
+                  child: Center(child: CircularProgressIndicator()));
             }
             if (state is AuthenticationAuthenticated) {
               return HomePage();
@@ -93,7 +100,8 @@ class App extends StatelessWidget {
               return LoginPageMain(supplierRepository: supplierRepository);
             }
             if (state is AuthenticationLoading) {
-              return CircularProgressIndicator();
+              return Container(
+                  child: Center(child: CircularProgressIndicator()));
             }
           },
         ),

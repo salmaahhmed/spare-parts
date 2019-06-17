@@ -13,3 +13,5 @@ class GetCategoryProducts extends CategoryProductsEvent {
   @override
   String toString() => 'GetCategoryProducts';
 }
+
+

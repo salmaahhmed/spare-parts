@@ -11,4 +11,3 @@ class GetCategories extends CategoryEvent {
   String toString() => 'getCategories {}}';
 }
 
-class GetCategoryProducts extends CategoryEvent {}
