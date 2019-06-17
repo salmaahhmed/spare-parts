@@ -1,5 +1,4 @@
 import 'package:parse_server_sdk/parse_server_sdk.dart';
-import 'package:sparepart/data/model/supplier_model.dart';
 import 'package:sparepart/data/remote_provider/supplier_api_provider.dart';
 import 'package:sparepart/data/repository/supplier/supplier_repository.dart';
 

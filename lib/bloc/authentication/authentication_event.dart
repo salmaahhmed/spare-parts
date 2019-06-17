@@ -1,6 +1,5 @@
 import 'package:meta/meta.dart';
 import 'package:equatable/equatable.dart';
-import 'package:sparepart/data/model/supplier_model.dart';
 
 abstract class AuthenticationEvent extends Equatable {
   AuthenticationEvent([List props = const []]) : super(props);
