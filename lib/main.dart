@@ -9,6 +9,7 @@ import 'package:sparepart/bloc/spare_part_category/category_bloc.dart';
 import 'package:sparepart/data/parse_keys.dart';
 import 'package:sparepart/data/remote_provider/category_api_provider.dart';
 import 'package:sparepart/data/remote_provider/supplier_api_provider.dart';
+import 'package:sparepart/data/repository/supplier/category_repository.dart';
 import 'package:sparepart/data/repository/supplier/category_repository_implementation.dart';
 import 'package:sparepart/data/repository/supplier/supplier_repository.dart';
 import 'package:sparepart/page/home_page.dart';
@@ -50,14 +51,8 @@ void main() async {
       SupplierRepoImplementation(supplierApiProvider);
 
   runApp(
-    BlocProvider<AuthenticationBloc>(
-      builder: (context) {
-        return AuthenticationBloc(supplierRepository: supplierRepository)
-          ..dispatch(AppStarted());
-      },
-      child: App(
-        supplierRepository: supplierRepository,
-      ),
+    App(
+      supplierRepository: supplierRepository,
     ),
   );
 }
@@ -65,28 +60,43 @@ void main() async {
 class App extends StatelessWidget {
   final SupplierRepository supplierRepository;
 
-  App({Key key, @required this.supplierRepository})
-      : super(key: key);
+  App({
+    Key key,
+    @required this.supplierRepository,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final auth = AuthenticationBloc(
+        supplierRepository: SupplierRepoImplementation(SupplierApiProvider()));
     return MaterialApp(
-      home: BlocBuilder<AuthenticationEvent, AuthenticationState>(
-        bloc: BlocProvider.of<AuthenticationBloc>(context),
-        builder: (BuildContext context, AuthenticationState state) {
-          if (state is AuthenticationUninitialized) {
-            return Center(child: CircularProgressIndicator());
-          }
-          if (state is AuthenticationAuthenticated) {
-            return HomePage();
-          }
-          if (state is AuthenticationUnauthenticated) {
-            return LoginPageMain(supplierRepository: supplierRepository);
-          }
-          if (state is AuthenticationLoading) {
-            return CircularProgressIndicator();
-          }
-        },
+      home: BlocProviderTree(
+        blocProviders: [
+          BlocProvider<AuthenticationBloc>(
+            builder: (BuildContext context) => auth,
+          ),
+          BlocProvider<CategoryBloc>(
+            builder: (BuildContext context) =>
+                CategoryBloc(CategoryRepoImplementation(CategoryApiProvider())),
+          ),
+        ],
+        child: BlocBuilder<AuthenticationEvent, AuthenticationState>(
+          bloc: auth..dispatch(AppStarted()),
+          builder: (BuildContext context, AuthenticationState state) {
+            if (state is AuthenticationUninitialized) {
+              return Center(child: CircularProgressIndicator());
+            }
+            if (state is AuthenticationAuthenticated) {
+              return HomePage();
+            }
+            if (state is AuthenticationUnauthenticated) {
+              return LoginPageMain(supplierRepository: supplierRepository);
+            }
+            if (state is AuthenticationLoading) {
+              return CircularProgressIndicator();
+            }
+          },
+        ),
       ),
     );
   }

@@ -11,7 +11,7 @@ class CategoryCard extends StatelessWidget {
     return Card(
       child: Row(
         children: <Widget>[
-          Image.network(category.get("image")),
+          Container(height: 50, width: 50, child: Image.network(category.get("image"))),
           Text(category.get("type"))
         ],
       ),

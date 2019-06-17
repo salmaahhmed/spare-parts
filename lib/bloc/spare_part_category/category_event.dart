@@ -1,17 +1,14 @@
 import 'package:equatable/equatable.dart';
-import 'package:parse_server_sdk/parse_server_sdk.dart';
 
 abstract class CategoryEvent extends Equatable {
   CategoryEvent([List props = const []]) : super(props);
 }
 
 class GetCategories extends CategoryEvent {
-  final List<ParseObject> categories;
-
-  GetCategories(this.categories);
+  GetCategories();
 
   @override
-  String toString() => 'getCategories {size: ${categories.length}}';
+  String toString() => 'getCategories {}}';
 }
 
 class GetCategoryProducts extends CategoryEvent {}
