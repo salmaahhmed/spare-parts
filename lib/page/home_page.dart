@@ -11,7 +11,8 @@ import 'package:sparepart/widget/category_card.dart';
 import 'package:sparepart/widget/orders_icon_widget.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({Key key}) : super(key: key);
+  final CategoryBloc bloc;
+  const HomePage(this.bloc, {Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +28,7 @@ class HomePage extends StatelessWidget {
         ],
       ),
       body: BlocBuilder<CategoryEvent, CategoryState>(
-        bloc: BlocProvider.of<CategoryBloc>(context)..dispatch(GetCategories()),
+        bloc: bloc..dispatch(GetCategories()),
         builder: (BuildContext context, CategoryState state) {
           if (state is GetCategoriesLoading) {
             return Center(

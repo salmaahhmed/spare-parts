@@ -15,6 +15,9 @@ import 'package:sparepart/data/repository/supplier/category_repository_implement
 import 'package:sparepart/data/repository/supplier/supplier_repository.dart';
 import 'package:sparepart/page/home_page.dart';
 import 'package:sparepart/page/login/login_page.dart';
+import 'bloc/order/order_bloc.dart';
+import 'data/remote_provider/order_api_provider.dart';
+import 'data/repository/supplier/orders_repository_implementation.dart';
 import 'data/repository/supplier/supplier_repository_implementation.dart';
 import 'package:parse_server_sdk/parse_server_sdk.dart';
 
@@ -84,6 +87,9 @@ class App extends StatelessWidget {
           BlocProvider<CategoryProductBloc>(
             builder: (BuildContext context) => CategoryProductBloc(
                 CategoryRepoImplementation(CategoryApiProvider())),
+          ),BlocProvider<OrderBloc>(
+            builder: (BuildContext context) => OrderBloc(
+                OrdersRepositoryImplementation(OrderApiProvider())),
           ),
         ],
         child: BlocBuilder<AuthenticationEvent, AuthenticationState>(
@@ -94,7 +100,7 @@ class App extends StatelessWidget {
                   child: Center(child: CircularProgressIndicator()));
             }
             if (state is AuthenticationAuthenticated) {
-              return HomePage();
+              return HomePage(BlocProvider.of<CategoryBloc>(context));
             }
             if (state is AuthenticationUnauthenticated) {
               return LoginPageMain(supplierRepository: supplierRepository);

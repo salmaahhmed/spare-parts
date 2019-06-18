@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sparepart/bloc/login/login_bloc.dart';
 import 'package:sparepart/bloc/login/login_event.dart';
 import 'package:sparepart/bloc/login/login_state.dart';
+import 'package:sparepart/bloc/spare_part_category/category_bloc.dart';
 import 'package:sparepart/page/home_page.dart';
 
 class LoginPage extends StatefulWidget {
@@ -19,7 +20,9 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    final crruentContext  = context;
     final _loginBloc = BlocProvider.of<LoginBloc>(context);
+
 
     _onLoginButtonPressed() {
       _loginBloc.dispatch(
@@ -80,13 +83,13 @@ class _LoginPageState extends State<LoginPage> {
             ),
           );
         } else if (state is LoginSuccess) {
-          Scaffold.of(context).showSnackBar(
+          Scaffold.of(crruentContext).showSnackBar(
             SnackBar(
               content: Text('success'),
               backgroundColor: Colors.green,
             ),
           );
-          _redirectToPage(context, HomePage());
+          _redirectToPage(crruentContext, HomePage(BlocProvider.of<CategoryBloc>(context)));
         }
       },
       child: BlocBuilder<LoginEvent, LoginState>(
