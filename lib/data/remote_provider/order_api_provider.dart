@@ -27,6 +27,9 @@ class OrderApiProvider{
 
       }
     return ordersList;
-     
   }
+  Future<ParseObject> acceptOrder(ParseObject acceptedOrder)async{
+    acceptedOrder.set("is_accepted", true);
+        return getApiResponse( await acceptedOrder.save()).result;
+   }
 }

@@ -14,19 +14,30 @@ class OrderBloc extends Bloc<OrdersEvent, OrderState> {
 
   @override
   Stream<OrderState> mapEventToState(OrdersEvent event) async* {
-    if (event is GetOrders) {
+    try {
+      if (event is GetOrders) {
       yield GetOrdersLoading();
-      try {
         List<ParseObject> parseObjects =
         await orderRepository.getOrders();
         if (parseObjects.isNotEmpty) {
           yield GetOrderSuccess(parseObjects);
         } else {
-          yield GetOrderEmpty("no Orders available");
+          yield GetOrderEmpty("no orders available");
         }
-      } catch (e) {
-        yield GetOrderFail(e.toString());
+
+    }
+    if (event is AcceptOrder){
+      yield GetOrdersLoading();
+    ParseObject acceptedOrder= await orderRepository.acceptOrders(event.acceptedOrder);
+      if (acceptedOrder!=null) {
+        yield AcceptOrderSuccess(acceptedOrder);
+      } else {
+        yield GetOrderEmpty("order not accepted");
       }
     }
+    } catch (e) {
+      yield GetOrderFail(e.toString());
+    }
   }
+
 }

@@ -17,6 +17,15 @@ class GetOrderSuccess extends OrderState {
   @override
   String toString() => 'getOrdersSuccess { size: ${orders.length} }';
 }
+class AcceptOrderSuccess extends OrderState {
+  final ParseObject acceptedOrder;
+
+  AcceptOrderSuccess(this.acceptedOrder);
+
+
+  @override
+  String toString() => 'accept order Success';
+}
 
 class GetOrderFail extends OrderState {
   final String error;
