@@ -4,7 +4,6 @@ import 'package:parse_server_sdk/parse_server_sdk.dart';
 import 'package:sparepart/bloc/category_products/category_products_bloc.dart';
 import 'package:sparepart/bloc/category_products/category_products_event.dart';
 import 'package:sparepart/bloc/category_products/category_products_state.dart';
-import 'package:sparepart/widget/orders_icon_widget.dart';
 import 'package:sparepart/widget/product_card.dart';
 
 class ProductsPage extends StatelessWidget {
@@ -47,6 +46,18 @@ class ProductsPage extends StatelessWidget {
         child: BlocBuilder<CategoryProductsEvent, CategoryProductState>(
           bloc: bloc,
           builder: (BuildContext context, CategoryProductState productState) {
+            List<ParseObject> productNotAddedFromSparePart = [];
+            //supplier_spare_part id exists in already added list
+            //each spare part object in products list object id
+            if (productState is GetCategoryProductSuccess) {
+              productState?.alreadyAdded?.forEach((productAdded) {
+                ParseObject object =
+                    productAdded.get<ParseObject>('spare_part_id');
+                productNotAddedFromSparePart = productState?.products
+                    ?.where((item) => item.objectId != object.objectId)
+                    ?.toList();
+              });
+            }
             if (productState is GetCategoryProductsLoading) {
               return Center(
                 child: CircularProgressIndicator(),
@@ -60,19 +71,10 @@ class ProductsPage extends StatelessWidget {
                     shrinkWrap: true,
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2),
-                    itemCount: productState.products.length,
+                    itemCount: productNotAddedFromSparePart.length,
                     itemBuilder: (context, index) {
-                      List<ParseObject> productAlreadyAddedFromSparePart;
-                      //supplier_spare_part id exists in already added list
-                      //each spare part object in products list object id
-                      productState.alreadyAdded.forEach((productAdded) {
-                        return productAlreadyAddedFromSparePart =
-                            productState.products.where((product) {
-                          product.objectId = productAdded.get("spare_part_id");
-                        });
-                      });
                       return ProductCard(
-                        product: productAlreadyAddedFromSparePart[index],
+                        product: productNotAddedFromSparePart[index],
                         bloc: bloc,
                         added: true,
                         onPressed: () async {

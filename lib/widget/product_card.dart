@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:parse_server_sdk/parse_server_sdk.dart';
 import 'package:sparepart/bloc/category_products/category_products_bloc.dart';
-import 'package:sparepart/bloc/category_products/category_products_event.dart';
-import 'package:sparepart/bloc/category_products/category_products_state.dart';
 
 class ProductCard extends StatefulWidget {
   final ParseObject product;
@@ -55,7 +52,7 @@ class _ProductCardState extends State<ProductCard> {
                 decoration:
                     BoxDecoration(borderRadius: BorderRadius.circular(0.5)),
                 child: RaisedButton(
-                  onPressed: () => widget.onPressed,
+                  onPressed: widget.onPressed,
                   child: Text(
                     "Add",
                     style: TextStyle(color: Colors.black),
