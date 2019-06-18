@@ -41,6 +41,7 @@ class ProductsPage extends StatelessWidget {
                 itemBuilder: (context, index) {
                   return ProductCard(
                     product: state.products[index],
+                    bloc: bloc,
                   );
                 },
               ),

@@ -14,4 +14,12 @@ class GetCategoryProducts extends CategoryProductsEvent {
   String toString() => 'GetCategoryProducts';
 }
 
+class AddProductToCategory extends CategoryProductsEvent {
+  final ParseObject product;
+  final double price;
 
+  AddProductToCategory(this.product, this.price);
+
+  @override
+  String toString() => 'AddProduct {product price: ${product.get("price")}}';
+}

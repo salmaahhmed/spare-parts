@@ -51,8 +51,8 @@ class HomePage extends StatelessWidget {
                       itemCount: state.categories.length,
                       itemBuilder: (BuildContext context, int index) {
                         return CategoryCard(
+                          BlocProvider.of<CategoryProductBloc>(context),
                           category: state.categories[index],
-                         
                         );
                       },
                     ),
@@ -70,5 +70,3 @@ class HomePage extends StatelessWidget {
     );
   }
 }
-
-

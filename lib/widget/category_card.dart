@@ -7,7 +7,8 @@ import 'package:sparepart/page/products_page.dart';
 
 class CategoryCard extends StatelessWidget {
   final ParseObject category;
-  const CategoryCard({Key key, this.category,}) : super(key: key);
+  final CategoryProductBloc bloc;
+  const CategoryCard( this.bloc, {Key key, this.category,}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +18,7 @@ class CategoryCard extends StatelessWidget {
           context,
           ProductsPage(
             category: category,
-            bloc: BlocProvider.of<CategoryProductBloc>(context)
+            bloc: bloc
               ..dispatch(GetCategoryProducts(category)),
           ));},
       child: Card(

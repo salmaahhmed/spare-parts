@@ -16,4 +16,8 @@ class CategoryRepoImplementation extends CategoryRepository {
   Future<List<ParseObject>> getProductCategories(ParseObject category) {
     return categoryApiProvider.getProductByCategory(category);
   }
+
+  Future<bool> addProductToCategory(ParseObject staticProduct, double price) {
+    return categoryApiProvider.addProduct(staticProduct, price);
+  }
 }

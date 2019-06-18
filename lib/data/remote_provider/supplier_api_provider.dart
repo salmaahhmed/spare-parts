@@ -40,4 +40,17 @@ class SupplierApiProvider {
 
     user.logout(deleteLocalUserData: true);
   }
+
+  static Future<ParseObject> currentSupplier() async {
+    ParseUser currentUser = await ParseUser.currentUser();
+
+    QueryBuilder<ParseObject> querySupplier =
+        QueryBuilder<ParseObject>(ParseObject('supplier'))
+          ..whereEqualTo('user_id', currentUser.toPointer());
+
+    final ParseObject supplierRes =
+        await getApiResponse(await querySupplier.query()).result;
+
+    return supplierRes;
+  }
 }

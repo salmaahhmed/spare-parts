@@ -34,3 +34,24 @@ class CategoryProductStateEmpty extends CategoryProductState {
   @override
   String toString() => 'CategoryProductStateEmpty { error: $error }';
 }
+
+class AddProductLoading extends CategoryProductState {
+  @override
+  String toString() => 'AddProductLoading';
+}
+
+class AddProductSuccess extends CategoryProductState {
+  final ParseObject product;
+
+  AddProductSuccess(this.product);
+  @override
+  String toString() => 'AddProductSuccess';
+}
+
+class AddProductFail extends CategoryProductState {
+  final String error;
+
+  AddProductFail(this.error);
+  @override
+  String toString() => 'AddProductFail: $error';
+}
