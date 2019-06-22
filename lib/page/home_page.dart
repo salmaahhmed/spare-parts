@@ -28,10 +28,11 @@ class HomePage extends StatelessWidget {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (ctx) =>
-                              OrderPage(orderBloc: BlocProvider.of<OrderBloc>(context))));
+                          builder: (ctx) => OrderPage(
+                              orderBloc: BlocProvider.of<OrderBloc>(context))));
                 },
-                child: OrderIcon())),
+                child:
+                    OrderIcon(orderBloc: BlocProvider.of<OrderBloc>(context)))),
         automaticallyImplyLeading: false,
         actions: <Widget>[
           Padding(

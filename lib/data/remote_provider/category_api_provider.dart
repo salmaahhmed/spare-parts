@@ -19,15 +19,40 @@ class CategoryApiProvider {
     return apiResponse.results;
   }
 
-  Future<bool> addProduct(ParseObject staticProduct, double price) async {
-    ParseObject supplierSparePart = ParseObject('supplier_spare_part')
-      ..set(
-          'supplier_id',
-          await SupplierApiProvider.currentSupplier()
-            ..toPointer())
-      ..set('spare_part_id', staticProduct.toPointer())
-      ..set('price', price);
+  Future<List<ParseObject>> getSupplierProducts() async {
+    ParseObject supplier = await SupplierApiProvider.currentSupplier();
+    QueryBuilder<ParseObject> querySupplierSparePart =
+        QueryBuilder<ParseObject>(ParseObject('supplier_spare_part'))
+          ..whereEqualTo('supplier_id', supplier.toPointer());
 
-    return getApiResponse(await supplierSparePart.save()).success;
+    List<ParseObject> products =
+        getApiResponse(await querySupplierSparePart.query()).results;
+
+    return products;
+  }
+
+  Future<dynamic> addProduct(ParseObject staticProduct, double price) async {
+    ParseObject supplier = await SupplierApiProvider.currentSupplier();
+    QueryBuilder<ParseObject> querySupplierSparePart =
+        QueryBuilder<ParseObject>(ParseObject('supplier_spare_part'))
+          ..whereEqualTo('supplier_id', supplier.toPointer())
+          ..whereEqualTo('spare_part_id', staticProduct.toPointer());
+
+    ParseObject product =
+        getApiResponse(await querySupplierSparePart.query()).result;
+
+    if (product != null) {
+      ParseObject supplierSparePart = ParseObject('supplier_spare_part')
+        ..set(
+            'supplier_id',
+            await SupplierApiProvider.currentSupplier()
+              ..toPointer())
+        ..set('spare_part_id', staticProduct.toPointer())
+        ..set('price', price);
+
+      return getApiResponse(await supplierSparePart.save()).success;
+    } else {
+      return "product already added";
+    }
   }
 }

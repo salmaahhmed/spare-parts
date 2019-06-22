@@ -25,38 +25,81 @@ class ProductsPage extends StatelessWidget {
               child: Icon(Icons.more_vert)),
         ],
       ),
-      body: BlocBuilder<CategoryProductsEvent, CategoryProductState>(
+      body: BlocListener(
         bloc: bloc,
-        builder: (BuildContext context, CategoryProductState state) {
-          if (state is GetCategoryProductsLoading) {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          } else if (state is GetCategoryProductSuccess) {
-            return Padding(
-              padding: EdgeInsets.only(top: 15,),
-              child: GridView.builder(
-                shrinkWrap: true,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2),
-                itemCount: state.products.length,
-                itemBuilder: (context, index) {
-                  return ProductCard(
-                    product: state.products[index],
-                    bloc: bloc,
-                  );
-                },
+        listener: (context, state) {
+          if (state is AddProductSuccess) {
+            Scaffold.of(context).showSnackBar(
+              SnackBar(
+                content: Text("product added successfully"),
+                backgroundColor: Colors.green,
               ),
             );
-          } else if (state is GetCategoryProductFail) {
-            return Center(
-              child: Text(state.error),
+          } else if (state is AddProductFail) {
+            Scaffold.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Add product failed'),
+                backgroundColor: Colors.red,
+              ),
             );
-          } else {
-            return Container();
           }
         },
+        child: BlocBuilder<CategoryProductsEvent, CategoryProductState>(
+          bloc: bloc,
+          builder: (BuildContext context, CategoryProductState state) {
+            if (state is GetCategoryProductsLoading) {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            } else if (state is GetCategoryProductSuccess) {
+              return Padding(
+                padding: EdgeInsets.only(
+                  top: 15,
+                ),
+                child: GridView.builder(
+                  shrinkWrap: true,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2),
+                  itemCount: state.products.length,
+                  itemBuilder: (context, index) {
+                    if (state.alreadyAdded.contains((ParseObject product) =>
+                        state.products[index].objectId == product.objectId))
+                        {
+                        return ProductCard(
+                        product: state.products[index],
+                        bloc: bloc,
+                        added: true,
+                      );
+                        }
+                     else {
+                       return ProductCard(
+                        product: state.products[index],
+                        bloc: bloc,
+                        added: false,
+                      );
+                     }
+                  },
+                ),
+              );
+            } else if (state is GetCategoryProductFail) {
+              return Center(
+                child: Text(state.error),
+              );
+            } else {
+              return Container();
+            }
+          },
+        ),
       ),
     );
   }
+}
+
+void _redirectToPage(BuildContext context, Widget page) {
+  WidgetsBinding.instance.addPostFrameCallback((_) {
+    MaterialPageRoute newRoute =
+        MaterialPageRoute(builder: (BuildContext context) => page);
+
+    Navigator.of(context).push(newRoute);
+  });
 }

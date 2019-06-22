@@ -1,4 +1,5 @@
 import 'package:parse_server_sdk/parse_server_sdk.dart';
+import 'package:sparepart/data/remote_provider/supplier_api_provider.dart';
 
 import 'api_response.dart';
 
@@ -14,12 +15,12 @@ class OrderApiProvider {
     // get list of products that supplier supplies
     QueryBuilder<ParseObject> querySupplierSpareParts =
         QueryBuilder<ParseObject>(ParseObject('supplier_spare_part'));
-    querySupplierSpareParts.whereMatchesQuery("supplier_id", queryUser);
+    querySupplierSpareParts.whereEqualTo(
+        "supplier_id", await SupplierApiProvider.currentSupplier());
     List<ParseObject> supplierSpareParts =
         getApiResponse(await querySupplierSpareParts.query()).results;
 
     //get attached orders to this supplier
-
     for (ParseObject value in supplierSpareParts) {
       QueryBuilder<ParseObject> queryOrderSupplierSpareParts =
           QueryBuilder<ParseObject>(ParseObject('order_supplier_spare_part'));
@@ -30,8 +31,9 @@ class OrderApiProvider {
     }
     return ordersList;
   }
-  Future<ParseObject> acceptOrder(ParseObject acceptedOrder)async{
+
+  Future<ParseObject> acceptOrder(ParseObject acceptedOrder) async {
     acceptedOrder.set("is_accepted", true);
-        return getApiResponse( await acceptedOrder.save()).result;
-   }
+    return getApiResponse(await acceptedOrder.save()).result;
+  }
 }

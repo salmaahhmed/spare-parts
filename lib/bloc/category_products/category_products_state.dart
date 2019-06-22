@@ -5,8 +5,8 @@ abstract class CategoryProductState extends Equatable {}
 
 class GetCategoryProductSuccess extends CategoryProductState {
   final List<ParseObject> products;
-
-  GetCategoryProductSuccess(this.products);
+  final List<ParseObject> alreadyAdded;
+  GetCategoryProductSuccess(this.products, this.alreadyAdded);
 
   @override
   String toString() => 'GetCategoryProductSuccess { size: ${products.length} }';
@@ -54,4 +54,12 @@ class AddProductFail extends CategoryProductState {
   AddProductFail(this.error);
   @override
   String toString() => 'AddProductFail: $error';
+}
+
+class AddProductAlreadyExist extends CategoryProductState {
+  final String error;
+
+  AddProductAlreadyExist(this.error);
+  @override
+  String toString() => 'AddProductAlreadyExist: $error';
 }

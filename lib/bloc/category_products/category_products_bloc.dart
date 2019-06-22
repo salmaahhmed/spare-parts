@@ -21,7 +21,8 @@ class CategoryProductBloc
         List<ParseObject> products =
             await categoryRepository.getProductCategories(event.category);
         if (products.isNotEmpty) {
-          yield GetCategoryProductSuccess(products);
+          yield GetCategoryProductSuccess(
+              products, await categoryRepository.getSupplierProducts());
         }
       } catch (e) {
         yield GetCategoryProductFail(e.toString());
@@ -34,8 +35,10 @@ class CategoryProductBloc
             event.product, event.price);
         if (productAdded) {
           yield AddProductSuccess(event.product);
-        } else {
+        } else if (!productAdded) {
           yield AddProductFail("an error occured");
+        } else {
+          yield AddProductAlreadyExist("product already added");
         }
       } catch (e) {
         yield AddProductFail(e.toString());
