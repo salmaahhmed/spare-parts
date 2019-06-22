@@ -11,4 +11,9 @@ class OrdersRepositoryImplementation extends OrdersRepository{
   Future<List<ParseObject>> getOrders() async{
     return orderApiProvider.getOrders(await ParseUser.currentUser());
   }
+
+  @override
+  Future<ParseObject> acceptOrders(ParseObject acceptedOrder) async {
+    return orderApiProvider.acceptOrder(acceptedOrder);
+  }
 }
