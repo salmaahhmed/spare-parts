@@ -40,3 +40,13 @@ class BindException implements Exception {
   final bool isTypeOfException;
   final String type;
 }
+
+Future<T> fetchParseObjectIfNeeded<T extends ParseObject>(T paresObj) async {
+  try {
+    if (paresObj == null) throw Exception('class Name is required');
+    return await paresObj.fromPin(paresObj.objectId) ??
+        getApiResponse(await paresObj.getObject(paresObj.objectId)).result;
+  } catch (e) {
+    return null;
+  }
+}

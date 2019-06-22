@@ -1,4 +1,4 @@
 const String keyApplicationName = 'spare_parts';
-const String keyParseApplicationId = 'qusvA4jZRdO8Pg8ZvyvwgEQu82k0k8WBbIJ1cwAX';
-const String keyParseMasterKey = 'CXTVNbCQSH9T3HmLlXAsYu4C4wIJtXG5gvBXbOzs';
+const String keyParseApplicationId = 'CG43izogj44mHzH9CBP2HJRO3wKNk4xBJBjJ8osK';
+const String keyParseMasterKey = 'EvvVxoTukRz9qLBwDpk7qSyyX64XFcWERxokyxxI';
 const String keyParseServerUrl = 'https://parseapi.back4app.com/';
