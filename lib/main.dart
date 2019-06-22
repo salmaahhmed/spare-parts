@@ -74,7 +74,11 @@ class App extends StatelessWidget {
     final auth = AuthenticationBloc(
         supplierRepository: SupplierRepoImplementation(SupplierApiProvider()));
     return MaterialApp(
-      theme: ThemeData(accentColor: Colors.orange, primaryColor: Colors.black),
+      theme: ThemeData(
+        accentColor: Colors.orange,
+        primaryColor: Colors.black,
+        scaffoldBackgroundColor: Colors.grey.shade100,
+      ),
       home: BlocProviderTree(
         blocProviders: [
           BlocProvider<AuthenticationBloc>(
@@ -87,9 +91,10 @@ class App extends StatelessWidget {
           BlocProvider<CategoryProductBloc>(
             builder: (BuildContext context) => CategoryProductBloc(
                 CategoryRepoImplementation(CategoryApiProvider())),
-          ),BlocProvider<OrderBloc>(
-            builder: (BuildContext context) => OrderBloc(
-                OrdersRepositoryImplementation(OrderApiProvider())),
+          ),
+          BlocProvider<OrderBloc>(
+            builder: (BuildContext context) =>
+                OrderBloc(OrdersRepositoryImplementation(OrderApiProvider())),
           ),
         ],
         child: BlocBuilder<AuthenticationEvent, AuthenticationState>(

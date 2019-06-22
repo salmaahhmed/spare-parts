@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sparepart/bloc/category_products/category_products_bloc.dart';
 import 'package:sparepart/bloc/category_products/category_products_event.dart';
+import 'package:sparepart/bloc/order/order_bloc.dart';
 import 'package:sparepart/bloc/spare_part_category/category_bloc.dart';
 import 'package:sparepart/bloc/spare_part_category/category_event.dart';
 import 'package:sparepart/bloc/spare_part_category/category_state.dart';
+import 'package:sparepart/page/order_page.dart';
 import 'package:sparepart/page/products_page.dart';
 import 'package:sparepart/widget/category_card.dart';
 import 'package:sparepart/widget/orders_icon_widget.dart';
@@ -18,8 +20,18 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading:
-            Padding(padding: EdgeInsets.only(left: 10), child: OrderIcon()),
+        title: Text("Categories"),
+        leading: Padding(
+            padding: EdgeInsets.only(left: 10),
+            child: InkWell(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (ctx) =>
+                              OrderPage(orderBloc: BlocProvider.of<OrderBloc>(context))));
+                },
+                child: OrderIcon())),
         automaticallyImplyLeading: false,
         actions: <Widget>[
           Padding(

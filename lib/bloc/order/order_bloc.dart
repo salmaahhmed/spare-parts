@@ -17,8 +17,7 @@ class OrderBloc extends Bloc<OrdersEvent, OrderState> {
     if (event is GetOrders) {
       yield GetOrdersLoading();
       try {
-        List<ParseObject> parseObjects =
-        await orderRepository.getOrders();
+        List<ParseObject> parseObjects = await orderRepository.getOrders();
         if (parseObjects.isNotEmpty) {
           yield GetOrderSuccess(parseObjects);
         } else {

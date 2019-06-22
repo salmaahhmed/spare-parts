@@ -15,6 +15,7 @@ class ProductsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        title: Text("products"),
         leading:
             Padding(padding: EdgeInsets.only(left: 10), child: OrderIcon()),
         automaticallyImplyLeading: false,
@@ -27,12 +28,13 @@ class ProductsPage extends StatelessWidget {
       body: BlocBuilder<CategoryProductsEvent, CategoryProductState>(
         bloc: bloc,
         builder: (BuildContext context, CategoryProductState state) {
-          if(state is GetCategoryProductsLoading){
-            return Center(child: CircularProgressIndicator(),);
-          }
-          else if (state is GetCategoryProductSuccess) {
+          if (state is GetCategoryProductsLoading) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (state is GetCategoryProductSuccess) {
             return Padding(
-              padding: EdgeInsets.only(top: 15, left: 5, right: 5),
+              padding: EdgeInsets.only(top: 15,),
               child: GridView.builder(
                 shrinkWrap: true,
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -46,12 +48,11 @@ class ProductsPage extends StatelessWidget {
                 },
               ),
             );
-          }
-          else if(state is GetCategoryProductFail)
-          {
-            return Center(child: Text(state.error),);
-          }
-          else {
+          } else if (state is GetCategoryProductFail) {
+            return Center(
+              child: Text(state.error),
+            );
+          } else {
             return Container();
           }
         },

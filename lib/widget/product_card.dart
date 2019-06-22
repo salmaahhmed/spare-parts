@@ -24,19 +24,25 @@ class _ProductCardState extends State<ProductCard> {
     return Card(
       child: Column(
         children: <Widget>[
-          Container(
-            child: widget.product == null
-                ? Container()
-                : Image.network(widget.product.get("product_image")),
-            width: 70,
-            height: 80,
-            color: Colors.grey.shade300,
+          Expanded(
+            child: Container(
+              child: widget.product == null
+                  ? Container()
+                  : Image.network(widget.product.get("product_image")),
+              width: 70,
+              height: 100,
+            ),
           ),
-          Text("product"),
+          Text("product name", style: Theme.of(context).textTheme.button,),
           Text("product description"),
+          SizedBox(height: 10),
           Container(
-              height: 15,
-              width: 60,
+            height: 25,
+            width: 130,
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(0.5)
+              ),
               child: RaisedButton(
                 onPressed: () {
                   showDialog(
@@ -45,8 +51,8 @@ class _ProductCardState extends State<ProductCard> {
                         return BlocBuilder<CategoryProductsEvent,
                             CategoryProductState>(
                           bloc: widget.bloc,
-                          builder: (BuildContext context,
-                              CategoryProductState state) {
+                          builder:
+                              (BuildContext context, CategoryProductState state) {
                             if (state is AddProductSuccess) {
                               Navigator.of(context).pop();
                               Navigator.of(context).pop();
@@ -86,10 +92,10 @@ class _ProductCardState extends State<ProductCard> {
                                     Padding(
                                       padding: const EdgeInsets.all(8.0),
                                       child: RaisedButton(
+                                        color: Colors.orange.withOpacity(0.8),
                                         child: Text("Add product"),
                                         onPressed: () {
-                                          if (_formKey.currentState
-                                              .validate()) {
+                                          if (_formKey.currentState.validate()) {
                                             _formKey.currentState.save();
                                             widget.bloc.dispatch(
                                                 AddProductToCategory(
@@ -107,8 +113,13 @@ class _ProductCardState extends State<ProductCard> {
                         );
                       });
                 },
-                child: Text("add product ?"),
-              ))
+                child: Text("Add", style: TextStyle(color: Colors.black),),
+                color: Colors.orange.withOpacity(0.8),
+  
+              ),
+            ),
+          ),
+          SizedBox(height: 10),
         ],
       ),
     );
