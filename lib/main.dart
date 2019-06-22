@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
-
 import 'package:bloc/bloc.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:parse_server_sdk/parse_server_sdk.dart';
 import 'package:sparepart/bloc/authentication/authentication_bloc.dart';
 import 'package:sparepart/bloc/authentication/authentication_event.dart';
 import 'package:sparepart/bloc/authentication/authentication_state.dart';
@@ -10,16 +10,15 @@ import 'package:sparepart/bloc/spare_part_category/category_bloc.dart';
 import 'package:sparepart/data/parse_keys.dart';
 import 'package:sparepart/data/remote_provider/category_api_provider.dart';
 import 'package:sparepart/data/remote_provider/supplier_api_provider.dart';
-import 'package:sparepart/data/repository/supplier/category_repository.dart';
 import 'package:sparepart/data/repository/supplier/category_repository_implementation.dart';
 import 'package:sparepart/data/repository/supplier/supplier_repository.dart';
 import 'package:sparepart/page/home_page.dart';
 import 'package:sparepart/page/login/login_page.dart';
+
 import 'bloc/order/order_bloc.dart';
 import 'data/remote_provider/order_api_provider.dart';
 import 'data/repository/supplier/orders_repository_implementation.dart';
 import 'data/repository/supplier/supplier_repository_implementation.dart';
-import 'package:parse_server_sdk/parse_server_sdk.dart';
 
 class SimpleBlocDelegate extends BlocDelegate {
   @override
@@ -42,12 +41,10 @@ class SimpleBlocDelegate extends BlocDelegate {
 }
 
 void main() async {
-  Parse().initialize(
-    keyParseApplicationId,
-    keyParseServerUrl,
-    masterKey: keyParseMasterKey,
-    debug: true,
-  );
+  await Parse().initialize(keyParseApplicationId, keyParseServerUrl,
+      masterKey: keyParseMasterKey,
+      debug: true,
+      coreStore: await CoreStoreSharedPrefsImp.getInstance());
   BlocSupervisor.delegate = SimpleBlocDelegate();
   SupplierApiProvider supplierApiProvider = SupplierApiProvider();
 
@@ -74,11 +71,7 @@ class App extends StatelessWidget {
     final auth = AuthenticationBloc(
         supplierRepository: SupplierRepoImplementation(SupplierApiProvider()));
     return MaterialApp(
-      theme: ThemeData(
-        accentColor: Colors.orange,
-        primaryColor: Colors.black,
-        scaffoldBackgroundColor: Colors.grey.shade100,
-      ),
+      theme: ThemeData(accentColor: Colors.orange, primaryColor: Colors.black),
       home: BlocProviderTree(
         blocProviders: [
           BlocProvider<AuthenticationBloc>(

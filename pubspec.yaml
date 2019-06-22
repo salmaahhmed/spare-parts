@@ -22,7 +22,7 @@ dependencies:
   parse_server_sdk:
    git:
      url: https://github.com/phillwiggins/flutter_parse_sdk.git
-     ref: 7b24830d4dda74ed7f3cc9d077d4b305d0a69c59
+     ref: e53f86ad05f8838e67ea00bc95d6de0845271b53
   bloc: ^0.14.2
   flutter_bloc: ^0.17.0
   equatable: ^0.2.6
