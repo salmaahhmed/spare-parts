@@ -49,13 +49,11 @@ class ProductsPage extends StatelessWidget {
           builder: (BuildContext context, CategoryProductState productState) {
             List<ParseObject> productNotAddedFromSparePart = [];
             if (productState is GetCategoryProductSuccess) {
-              productState?.alreadyAdded?.forEach((productAdded) {
-                ParseObject object =
-                    productAdded.get<ParseObject>('spare_part_id');
-                productNotAddedFromSparePart = productState?.products
-                    ?.where((item) => item.objectId != object.objectId)
-                    ?.toList();
-              });
+                for (var i = 0; i < productState.products.length; i++) {
+                  if(!productState.alreadyAddedProducts.contains(productState.products[i].objectId)){
+                    productNotAddedFromSparePart.add(productState.products[i]);
+                  }
+                }
             }
             if (productState is GetCategoryProductsLoading) {
               return Center(

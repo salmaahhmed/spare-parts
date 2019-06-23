@@ -5,8 +5,9 @@ abstract class CategoryProductState extends Equatable {}
 
 class GetCategoryProductSuccess extends CategoryProductState {
   final List<ParseObject> products;
+  final List<String> alreadyAddedProducts;
   final List<ParseObject> alreadyAdded;
-  GetCategoryProductSuccess(this.products, this.alreadyAdded);
+  GetCategoryProductSuccess(this.products, this.alreadyAdded, this.alreadyAddedProducts);
 
   @override
   String toString() => 'GetCategoryProductSuccess { size: ${products.length} }';

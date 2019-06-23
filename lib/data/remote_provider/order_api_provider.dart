@@ -14,8 +14,6 @@ class OrderApiProvider {
     querySupplierSpareParts.whereEqualTo(
         "supplier_id", (await SupplierApiProvider.currentSupplier()).toPointer());
 
-    querySupplierSpareParts.whereEqualTo("supplier_id",
-        (await SupplierApiProvider.currentSupplier()).toPointer());
     List<ParseObject> supplierSpareParts =
         getApiResponse(await querySupplierSpareParts.query()).results;
 

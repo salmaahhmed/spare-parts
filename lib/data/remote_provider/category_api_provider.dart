@@ -4,6 +4,7 @@ import 'package:sparepart/data/remote_provider/supplier_api_provider.dart';
 
 class CategoryApiProvider {
   List<ParseObject> categoryRes;
+  List<String> productsChosen= [];
   Future<List<ParseObject>> getCategories() async {
     categoryRes =
         getApiResponse(await ParseObject('spare_part_type').getAll()).results;
@@ -19,16 +20,27 @@ class CategoryApiProvider {
     return apiResponse.results;
   }
 
-  Future<List<ParseObject>> getSupplierProducts() async {
+  Future<List<ParseObject>> getSupplierProducts(ParseObject category) async {
     ParseObject supplier = await SupplierApiProvider.currentSupplier();
+
     QueryBuilder<ParseObject> querySupplierSparePart =
-        QueryBuilder<ParseObject>(ParseObject('supplier_spare_part'))
-          ..whereEqualTo('supplier_id', supplier.toPointer());
+        QueryBuilder<ParseObject>(ParseObject('supplier_spare_part'));
+    querySupplierSparePart.includeObject(["spare_part_id","spare_part_type_id"]);
+    querySupplierSparePart.whereEqualTo('supplier_id', supplier.toPointer());
 
     List<ParseObject> products =
         getApiResponse(await querySupplierSparePart.query()).results;
-
-    return products;
+    List<ParseObject> productsByCategory= [];
+    productsChosen.clear();
+    products.forEach((product){
+      if(product.get("spare_part_id").get("spare_part_type_id").objectId==category.objectId)
+        productsChosen.add(product.get("spare_part_id").objectId);
+        productsByCategory.add(product);
+      });
+    return productsByCategory;
+  }
+  List<String> getCategoriesOfProduct(){
+    return  productsChosen;
   }
 
   Future<int> addProduct(ParseObject staticProduct, double price) async {

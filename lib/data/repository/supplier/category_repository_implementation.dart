@@ -23,7 +23,12 @@ class CategoryRepoImplementation extends CategoryRepository {
   }
 
   @override
-  Future<List<ParseObject>> getSupplierProducts() {
-    return categoryApiProvider.getSupplierProducts();
+  Future<List<ParseObject>> getSupplierProducts(ParseObject category) {
+    return categoryApiProvider.getSupplierProducts(category);
+  }
+
+  @override
+  List<String> getProductsAddedOfSelectedCategory() {
+    return categoryApiProvider.productsChosen;
   }
 }
