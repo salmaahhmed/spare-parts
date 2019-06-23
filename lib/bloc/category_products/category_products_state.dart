@@ -55,11 +55,3 @@ class AddProductFail extends CategoryProductState {
   @override
   String toString() => 'AddProductFail: $error';
 }
-
-class AddProductAlreadyExist extends CategoryProductState {
-  final String error;
-
-  AddProductAlreadyExist(this.error);
-  @override
-  String toString() => 'AddProductAlreadyExist: $error';
-}

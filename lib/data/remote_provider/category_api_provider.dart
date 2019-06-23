@@ -31,7 +31,7 @@ class CategoryApiProvider {
     return products;
   }
 
-  Future<dynamic> addProduct(ParseObject staticProduct, double price) async {
+  Future<int> addProduct(ParseObject staticProduct, double price) async {
     ParseObject supplier = await SupplierApiProvider.currentSupplier();
     QueryBuilder<ParseObject> querySupplierSparePart =
         QueryBuilder<ParseObject>(ParseObject('supplier_spare_part'))
@@ -41,7 +41,7 @@ class CategoryApiProvider {
     ParseObject product =
         getApiResponse(await querySupplierSparePart.query()).result;
 
-    if (product != null) {
+    if (product == null) {
       ParseObject supplierSparePart = ParseObject('supplier_spare_part')
         ..set(
             'supplier_id',
@@ -49,10 +49,10 @@ class CategoryApiProvider {
               ..toPointer())
         ..set('spare_part_id', staticProduct.toPointer())
         ..set('price', price);
-
-      return getApiResponse(await supplierSparePart.save()).success;
+      
+      return getApiResponse(await supplierSparePart.save()).success == true ? 0 : 1 ;
     } else {
-      return "product already added";
+      return 2;
     }
   }
 }

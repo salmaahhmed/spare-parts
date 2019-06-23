@@ -35,9 +35,10 @@ class ProductsPage extends StatelessWidget {
               ),
             );
           } else if (state is AddProductFail) {
+            print(state.error);
             Scaffold.of(context).showSnackBar(
               SnackBar(
-                content: Text('Add product failed'),
+                content: Text(state.error),
                 backgroundColor: Colors.red,
               ),
             );
@@ -47,8 +48,6 @@ class ProductsPage extends StatelessWidget {
           bloc: bloc,
           builder: (BuildContext context, CategoryProductState productState) {
             List<ParseObject> productNotAddedFromSparePart = [];
-            //supplier_spare_part id exists in already added list
-            //each spare part object in products list object id
             if (productState is GetCategoryProductSuccess) {
               productState?.alreadyAdded?.forEach((productAdded) {
                 ParseObject object =
@@ -76,7 +75,6 @@ class ProductsPage extends StatelessWidget {
                       return ProductCard(
                         product: productNotAddedFromSparePart[index],
                         bloc: bloc,
-                        added: true,
                         onPressed: () async {
                           return await showDialog(
                               context: context,
@@ -157,9 +155,7 @@ class ProductsPage extends StatelessWidget {
               return Center(
                 child: Text(productState.error),
               );
-            } else {
-              return Container();
-            }
+            } 
           },
         ),
       ),

@@ -7,12 +7,10 @@ class ProductCard extends StatefulWidget {
   final CategoryProductBloc bloc;
   final Function onPressed;
   final GlobalKey formKey;
-  final bool added;
   const ProductCard(
       {Key key,
       this.product,
       this.bloc,
-      this.added,
       this.onPressed,
       this.formKey})
       : super(key: key);
@@ -27,7 +25,6 @@ class _ProductCardState extends State<ProductCard> {
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: widget.added == true ? Colors.transparent : Colors.grey.shade100,
       child: Container(
         height: 400,
         child: Column(

@@ -33,14 +33,14 @@ class CategoryProductBloc
       yield AddProductLoading();
 
       try {
-        bool productAdded = await categoryRepository.addProductToCategory(
+        int productAdded = await categoryRepository.addProductToCategory(
             event.product, event.price);
-        if (productAdded) {
+        if (productAdded == 0) {
           yield AddProductSuccess(event.product);
-        } else if (!productAdded) {
+        } else if (productAdded == 1) {
           yield AddProductFail("an error occured");
         } else {
-          yield AddProductAlreadyExist("product already added");
+          yield AddProductFail("product already added");
         }
       } catch (e) {
         yield AddProductFail(e.toString());
