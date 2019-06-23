@@ -20,9 +20,11 @@ class CategoryProductBloc
       try {
         List<ParseObject> products =
             await categoryRepository.getProductCategories(event.category);
+
+        List<ParseObject> alreadyAdded =
+            await categoryRepository.getSupplierProducts();
         if (products.isNotEmpty) {
-          yield GetCategoryProductSuccess(
-              products, await categoryRepository.getSupplierProducts());
+          yield GetCategoryProductSuccess(products, alreadyAdded);
         }
       } catch (e) {
         yield GetCategoryProductFail(e.toString());

@@ -13,11 +13,11 @@ class ProductsPage extends StatelessWidget {
   const ProductsPage({Key key, this.category, this.bloc}) : super(key: key);
   @override
   Widget build(BuildContext context) {
+    final _formKey = GlobalKey<FormState>();
+    double _price;
     return Scaffold(
       appBar: AppBar(
         title: Text("products"),
-        leading:
-            Padding(padding: EdgeInsets.only(left: 10), child: OrderIcon()),
         automaticallyImplyLeading: false,
         actions: <Widget>[
           Padding(
@@ -46,44 +46,114 @@ class ProductsPage extends StatelessWidget {
         },
         child: BlocBuilder<CategoryProductsEvent, CategoryProductState>(
           bloc: bloc,
-          builder: (BuildContext context, CategoryProductState state) {
-            if (state is GetCategoryProductsLoading) {
+          builder: (BuildContext context, CategoryProductState productState) {
+            if (productState is GetCategoryProductsLoading) {
               return Center(
                 child: CircularProgressIndicator(),
               );
-            } else if (state is GetCategoryProductSuccess) {
+            } else if (productState is GetCategoryProductSuccess) {
               return Padding(
                 padding: EdgeInsets.only(
                   top: 15,
                 ),
                 child: GridView.builder(
-                  shrinkWrap: true,
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2),
-                  itemCount: state.products.length,
-                  itemBuilder: (context, index) {
-                    if (state.alreadyAdded.contains((ParseObject product) =>
-                        state.products[index].objectId == product.objectId))
-                        {
-                        return ProductCard(
-                        product: state.products[index],
+                    shrinkWrap: true,
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2),
+                    itemCount: productState.products.length,
+                    itemBuilder: (context, index) {
+                      List<ParseObject> productAlreadyAddedFromSparePart;
+                      //supplier_spare_part id exists in already added list
+                      //each spare part object in products list object id
+                      productState.alreadyAdded.forEach((productAdded) {
+                        return productAlreadyAddedFromSparePart =
+                            productState.products.where((product) {
+                          product.objectId = productAdded.get("spare_part_id");
+                        });
+                      });
+                      return ProductCard(
+                        product: productAlreadyAddedFromSparePart[index],
                         bloc: bloc,
                         added: true,
+                        onPressed: () async {
+                          return await showDialog(
+                              context: context,
+                              builder: (ctx) {
+                                return BlocBuilder<CategoryProductsEvent,
+                                    CategoryProductState>(
+                                  bloc: bloc,
+                                  builder: (BuildContext context,
+                                      CategoryProductState state) {
+                                    if (state is AddProductSuccess) {
+                                      Navigator.pop(context);
+                                    }
+                                    if (state is AddProductFail) {
+                                      Navigator.pop(ctx);
+                                    }
+                                    return AlertDialog(
+                                      content: Form(
+                                        key: _formKey,
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: <Widget>[
+                                            state is AddProductLoading
+                                                ? Center(
+                                                    child:
+                                                        CircularProgressIndicator())
+                                                : Container(),
+                                            Center(
+                                              child: Text("Add product price"),
+                                            ),
+                                            Padding(
+                                              padding: EdgeInsets.all(8.0),
+                                              child: TextFormField(
+                                                keyboardType:
+                                                    TextInputType.number,
+                                                onSaved: (value) => _price =
+                                                    double.parse(value),
+                                                validator: (value) {
+                                                  if (value.length == 0) {
+                                                    return "price cant be empty";
+                                                  }
+                                                },
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: RaisedButton(
+                                                color: Colors.orange
+                                                    .withOpacity(0.8),
+                                                child: Text("Add product"),
+                                                onPressed: () {
+                                                  if (_formKey.currentState
+                                                      .validate()) {
+                                                    _formKey.currentState
+                                                        .save();
+                                                    bloc.dispatch(
+                                                        AddProductToCategory(
+                                                            productState
+                                                                    .products[
+                                                                index],
+                                                            _price));
+                                                  }
+                                                },
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                );
+                              });
+                        },
                       );
-                        }
-                     else {
-                       return ProductCard(
-                        product: state.products[index],
-                        bloc: bloc,
-                        added: false,
-                      );
-                     }
-                  },
-                ),
+                    }),
               );
-            } else if (state is GetCategoryProductFail) {
+            } else if (productState is GetCategoryProductFail) {
               return Center(
-                child: Text(state.error),
+                child: Text(productState.error),
               );
             } else {
               return Container();

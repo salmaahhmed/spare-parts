@@ -11,13 +11,11 @@ class OrderApiProvider {
     // get list of products that supplier supplies
     QueryBuilder<ParseObject> querySupplierSpareParts =
         QueryBuilder<ParseObject>(ParseObject('supplier_spare_part'));
-<<<<<<< HEAD
     querySupplierSpareParts.whereEqualTo(
-        "supplier_id", await SupplierApiProvider.currentSupplier());
-=======
+        "supplier_id", (await SupplierApiProvider.currentSupplier()).toPointer());
+
     querySupplierSpareParts.whereEqualTo("supplier_id",
         (await SupplierApiProvider.currentSupplier()).toPointer());
->>>>>>> test
     List<ParseObject> supplierSpareParts =
         getApiResponse(await querySupplierSpareParts.query()).results;
 

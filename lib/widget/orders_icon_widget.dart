@@ -19,7 +19,7 @@ class OrderIcon extends StatelessWidget {
               Icons.notifications,
               size: 30,
               color: Colors.white,
-            ))),
+            ),),),
         Positioned(
           bottom: 30,
           left: 24,

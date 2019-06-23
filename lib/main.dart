@@ -50,32 +50,34 @@ void main() async {
 
   final SupplierRepoImplementation supplierRepository =
       SupplierRepoImplementation(supplierApiProvider);
+  final AuthenticationBloc auth =
+      AuthenticationBloc(supplierRepository: supplierRepository);
 
   runApp(
     App(
       supplierRepository: supplierRepository,
+      bloc: auth,
     ),
   );
 }
 
 class App extends StatelessWidget {
   final SupplierRepository supplierRepository;
-
+  final AuthenticationBloc bloc;
   App({
     Key key,
     @required this.supplierRepository,
+    this.bloc,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final auth = AuthenticationBloc(
-        supplierRepository: SupplierRepoImplementation(SupplierApiProvider()));
     return MaterialApp(
       theme: ThemeData(accentColor: Colors.orange, primaryColor: Colors.black),
       home: BlocProviderTree(
         blocProviders: [
           BlocProvider<AuthenticationBloc>(
-            builder: (BuildContext context) => auth,
+            builder: (BuildContext context) => bloc,
           ),
           BlocProvider<CategoryBloc>(
             builder: (BuildContext context) =>
@@ -91,14 +93,14 @@ class App extends StatelessWidget {
           ),
         ],
         child: BlocBuilder<AuthenticationEvent, AuthenticationState>(
-          bloc: auth..dispatch(AppStarted()),
+          bloc: bloc..dispatch(AppStarted()),
           builder: (BuildContext context, AuthenticationState state) {
             if (state is AuthenticationUninitialized) {
               return Container(
                   child: Center(child: CircularProgressIndicator()));
             }
             if (state is AuthenticationAuthenticated) {
-              return HomePage(BlocProvider.of<CategoryBloc>(context));
+              return HomePage(BlocProvider.of<CategoryBloc>(context),);
             }
             if (state is AuthenticationUnauthenticated) {
               return LoginPageMain(supplierRepository: supplierRepository);

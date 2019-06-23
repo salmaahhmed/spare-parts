@@ -6,12 +6,11 @@ abstract class OrdersEvent extends Equatable {
 }
 
 class GetOrders extends OrdersEvent {
-  GetOrders();
-
   @override
   String toString() => 'getOrders {}}';
 }
-class AcceptOrder extends OrdersEvent{
+
+class AcceptOrder extends OrdersEvent {
   final ParseObject acceptedOrder;
 
   AcceptOrder(this.acceptedOrder);
