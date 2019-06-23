@@ -12,40 +12,51 @@ class OrderProductCard extends StatelessWidget {
     ParseObject object = order?.get("supplier_spare_part_id");
     ParseObject orderss = object?.get("spare_part_id");
     return Container(
+      margin: EdgeInsets.only(right: 10),
       child: Row(
         children: <Widget>[
           //    FlutterLogo(),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Text(
-                'Product Name: ${orderss?.get<String>("name") ?? "Orange"}',
-                textAlign: TextAlign.left,
-              ),
-              Text(
-                'Product Desciption: ${orderss?.get("desciption") ?? "product for tesing some info about how to get most"}',
-                textAlign: TextAlign.left,
-              ),
-              Text(
-                "Quantity: ${order?.get<String>(
-                  "quantity",
-                )}?? quantity",
-                textAlign: TextAlign.start,
-              ),
-              Text(
-                "Price: ${object?.get("price")}?? 100\$",
-                textAlign: TextAlign.start,
-              )
-            ],
+          Expanded(
+            flex: 3,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  'Product Name: ${orderss?.get<String>("name") ?? "Orange"}',
+                  textAlign: TextAlign.left,
+                ),
+                Text(
+                  'Product Desciption: ${orderss?.get("desciption") ?? "product for tesing some info about how to get most"}',
+                  textAlign: TextAlign.left,
+                ),
+                Text(
+                  "Quantity: ${order?.get<String>(
+                        "quantity",
+                      ) ?? "quantity"}",
+                  textAlign: TextAlign.start,
+                ),
+                Text(
+                  "Price: ${object?.get("price") ?? "100\$"}",
+                  textAlign: TextAlign.start,
+                )
+              ],
+            ),
           ),
-          Container(
-            child: FlatButton(
-              onPressed: () {
-                bloc..dispatch(AcceptOrder(order));
-              },
-              color: Colors.green,
-              child: Text("Accept"),
+
+          Expanded(
+            flex: 1,
+            child: Container(
+              child: FlatButton(
+                onPressed: () {
+                  bloc..dispatch(AcceptOrder(order));
+                },
+                color: Colors.green,
+                child: Text(
+                  "Accept",
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
             ),
           ),
         ],
