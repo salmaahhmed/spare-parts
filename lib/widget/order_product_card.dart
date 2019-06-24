@@ -15,46 +15,60 @@ class OrderProductCard extends StatelessWidget {
       margin: EdgeInsets.only(right: 10),
       child: Row(
         children: <Widget>[
-          //    FlutterLogo(),
           Expanded(
-            flex: 3,
+            flex: 4,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Text(
-                  'Product Name: ${orderss?.get<String>("name") ?? "Orange"}',
-                  textAlign: TextAlign.left,
+                Row(
+                  children: <Widget>[
+                    Text(
+                      'Product Name: ',
+                      textAlign: TextAlign.left,
+                      style: Theme.of(context).textTheme.button,
+                    ),
+                    Text("${orderss?.get<String>("name") ?? "Orange"}"),
+                  ],
                 ),
-                Text(
-                  'Product Desciption: ${orderss?.get("desciption") ?? "product for tesing some info about how to get most"}',
-                  textAlign: TextAlign.left,
+                Row(
+                  children: <Widget>[
+                    Text(
+                      "Quantity: ",
+                      textAlign: TextAlign.start,
+                      style: Theme.of(context).textTheme.button,
+                    ),
+                    Text("${order?.get<String>(
+                          "quantity",
+                        ) ?? "quantity"}")
+                  ],
                 ),
-                Text(
-                  "Quantity: ${order?.get<String>(
-                        "quantity",
-                      ) ?? "quantity"}",
-                  textAlign: TextAlign.start,
-                ),
-                Text(
-                  "Price: ${object?.get("price") ?? "100\$"}",
-                  textAlign: TextAlign.start,
-                )
+                Row(children: <Widget>[
+                  Text(
+                    "Price: ",
+                    textAlign: TextAlign.start,
+                    style: Theme.of(context).textTheme.button,
+                  ),
+                  Text("${object?.get("price") ?? "100"}"),
+                  Text("LE"),
+                ])
               ],
             ),
           ),
-
           Expanded(
-            flex: 1,
+            flex: 2,
             child: Container(
+              width: 50,
               child: FlatButton(
                 onPressed: () {
                   bloc..dispatch(AcceptOrder(order));
                 },
                 color: Colors.green,
-                child: Text(
-                  "Accept",
-                  style: TextStyle(color: Colors.white),
+                child: Container(
+                  child: Text(
+                    "Accept",
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
               ),
             ),

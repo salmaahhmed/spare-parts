@@ -4,7 +4,7 @@ import 'package:sparepart/data/remote_provider/supplier_api_provider.dart';
 
 class CategoryApiProvider {
   List<ParseObject> categoryRes;
-  List<String> productsChosen= [];
+  List<String> productsChosen = [];
   Future<List<ParseObject>> getCategories() async {
     categoryRes =
         getApiResponse(await ParseObject('spare_part_type').getAll()).results;
@@ -25,12 +25,14 @@ class CategoryApiProvider {
 
     QueryBuilder<ParseObject> querySupplierSparePart =
         QueryBuilder<ParseObject>(ParseObject('supplier_spare_part'));
-    querySupplierSparePart.includeObject(["spare_part_id","spare_part_type_id"]);
+    querySupplierSparePart
+        .includeObject(["spare_part_id", "spare_part_type_id"]);
     querySupplierSparePart.whereEqualTo('supplier_id', supplier.toPointer());
 
     List<ParseObject> products =
         getApiResponse(await querySupplierSparePart.query()).results;
-    List<ParseObject> productsByCategory= [];
+        
+    List<ParseObject> productsByCategory = [];
     productsChosen.clear();
     if(products!=null){
     products.forEach((product){
@@ -41,8 +43,9 @@ class CategoryApiProvider {
     }
     return productsByCategory;
   }
-  List<String> getCategoriesOfProduct(){
-    return  productsChosen;
+
+  List<String> getCategoriesOfProduct() {
+    return productsChosen;
   }
 
   Future<int> addProduct(ParseObject staticProduct, double price) async {
@@ -63,8 +66,10 @@ class CategoryApiProvider {
               ..toPointer())
         ..set('spare_part_id', staticProduct.toPointer())
         ..set('price', price);
-      
-      return getApiResponse(await supplierSparePart.save()).success == true ? 0 : 1 ;
+
+      return getApiResponse(await supplierSparePart.save()).success == true
+          ? 0
+          : 1;
     } else {
       return 2;
     }

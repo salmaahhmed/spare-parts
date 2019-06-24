@@ -50,6 +50,7 @@ class ProductsPage extends StatelessWidget {
           bloc: bloc,
           builder: (BuildContext context, CategoryProductState productState) {
             List<ParseObject> productNotAddedFromSparePart = [];
+                                        return AlertDialog(
             if (productState is GetCategoryProductsLoading) {
               return Center(
                 child: CircularProgressIndicator(),

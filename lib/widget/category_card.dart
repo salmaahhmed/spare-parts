@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:parse_server_sdk/parse_server_sdk.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:sparepart/bloc/category_products/category_products_bloc.dart';
 import 'package:sparepart/bloc/category_products/category_products_event.dart';
 import 'package:sparepart/page/products_page.dart';
@@ -8,35 +9,88 @@ import 'package:sparepart/page/products_page.dart';
 class CategoryCard extends StatelessWidget {
   final ParseObject category;
   final CategoryProductBloc bloc;
-  const CategoryCard( this.bloc, {Key key, this.category,}) : super(key: key);
+  const CategoryCard(
+    this.bloc, {
+    Key key,
+    this.category,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap:() {
-         _redirectToPage(
-          context,
-          ProductsPage(
-            category: category,
-            bloc: bloc
-              ..dispatch(GetCategoryProducts(category)),
-          ));},
-      child: Card(
-        child: Row(
-          children: <Widget>[
-            Padding(
-                padding:
-                    EdgeInsets.only(bottom: 10, top: 10, right: 10, left: 10),
-                child: Container(
-                    height: 50,
-                    width: 50,
-                    child: Image.network(category.get("image")))),
-            Text(
-              category.get("type"),
-              style: Theme.of(context).textTheme.body2,
-            )
-          ],
-        ),
+      onTap: () {
+        _redirectToPage(
+            context,
+            ProductsPage(
+              category: category,
+              bloc: bloc..dispatch(GetCategoryProducts(category)),
+            ));
+      },
+      child: Stack(
+        children: [
+          Padding(
+            padding: EdgeInsets.all(10),
+            child: Card(
+              margin: EdgeInsets.only(left: 20),
+              elevation: 2,
+              child: Container(
+                height: 70,
+                width: 370,
+                child: Center(
+                  child: Text(
+                    category.get("type"),
+                    style: Theme.of(context).textTheme.body2,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Positioned(
+            top: 5,
+            bottom: 5,
+            child: Padding(
+              padding: EdgeInsets.only(left: 5.0),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade100,
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.orange,
+                      blurRadius: 6.0,
+                      spreadRadius: 0.5,
+                      offset: Offset(
+                        1.0,
+                        1.0,
+                      ),
+                    )
+                  ],
+                ),
+                height: 80,
+                width: 70,
+                child: Padding(
+                  padding:
+                      EdgeInsets.only(bottom: 10, top: 10, right: 10, left: 10),
+                  child: category.get("image") == null
+                      ? Shimmer.fromColors(
+                          baseColor: Colors.grey,
+                          highlightColor: Colors.orange,
+                          child: Text(
+                            '',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 40.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ))
+                      : Image.network(
+                          category.get("image"),
+                        ),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

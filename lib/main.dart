@@ -72,27 +72,28 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(accentColor: Colors.orange, primaryColor: Colors.black),
-      home: BlocProviderTree(
-        blocProviders: [
-          BlocProvider<AuthenticationBloc>(
-            builder: (BuildContext context) => bloc,
-          ),
-          BlocProvider<CategoryBloc>(
-            builder: (BuildContext context) =>
-                CategoryBloc(CategoryRepoImplementation(CategoryApiProvider())),
-          ),
-          BlocProvider<CategoryProductBloc>(
-            builder: (BuildContext context) => CategoryProductBloc(
-                CategoryRepoImplementation(CategoryApiProvider())),
-          ),
-          BlocProvider<OrderBloc>(
-            builder: (BuildContext context) =>
-                OrderBloc(OrdersRepositoryImplementation(OrderApiProvider())),
-          ),
-        ],
-        child: BlocBuilder<AuthenticationEvent, AuthenticationState>(
+    return BlocProviderTree(
+      blocProviders: [
+        BlocProvider<AuthenticationBloc>(
+          builder: (BuildContext context) => bloc,
+        ),
+        BlocProvider<CategoryBloc>(
+          builder: (BuildContext context) =>
+              CategoryBloc(CategoryRepoImplementation(CategoryApiProvider())),
+        ),
+        BlocProvider<CategoryProductBloc>(
+          builder: (BuildContext context) => CategoryProductBloc(
+              CategoryRepoImplementation(CategoryApiProvider())),
+        ),
+        BlocProvider<OrderBloc>(
+          builder: (BuildContext context) =>
+              OrderBloc(OrdersRepositoryImplementation(OrderApiProvider())),
+        ),
+      ],
+      child: MaterialApp(
+        theme:
+            ThemeData(accentColor: Colors.orange, primaryColor: Colors.black),
+        home: BlocBuilder<AuthenticationEvent, AuthenticationState>(
           bloc: bloc..dispatch(AppStarted()),
           builder: (BuildContext context, AuthenticationState state) {
             if (state is AuthenticationUninitialized) {
@@ -100,7 +101,9 @@ class App extends StatelessWidget {
                   child: Center(child: CircularProgressIndicator()));
             }
             if (state is AuthenticationAuthenticated) {
-              return HomePage(BlocProvider.of<CategoryBloc>(context),);
+              return HomePage(
+                BlocProvider.of<CategoryBloc>(context),
+              );
             }
             if (state is AuthenticationUnauthenticated) {
               return LoginPageMain(supplierRepository: supplierRepository);

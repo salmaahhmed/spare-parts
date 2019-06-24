@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sparepart/bloc/order/order_bloc.dart';
 import 'package:sparepart/bloc/order/order_event.dart';
 import 'package:sparepart/bloc/order/order_state.dart';
+import 'package:sparepart/page/home_page.dart';
 import 'package:sparepart/widget/order_product_card.dart';
 import 'package:sparepart/widget/orders_icon_widget.dart';
 
@@ -16,13 +17,6 @@ class OrderPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text("Categories"),
-        leading: Padding(
-            padding: EdgeInsets.only(left: 10),
-            child: InkWell(
-                onTap: () {
-                  OrderPage();
-                },
-                child: OrderIcon())),
         automaticallyImplyLeading: false,
         actions: <Widget>[
           Padding(
@@ -31,37 +25,49 @@ class OrderPage extends StatelessWidget {
         ],
       ),
       body: BlocBuilder<OrdersEvent, OrderState>(
-          bloc: orderBloc,
-          builder: (context, OrderState state) {
+        bloc: orderBloc..dispatch(GetOrders()),
+        builder: (context, OrderState state) {
+          if (state is GetOrderSuccess) {
             return ListView.builder(
-                itemCount: 10,
+                itemCount: state.orders.length,
                 itemBuilder: (ctx, index) {
                   return Padding(
-                      padding: EdgeInsets.all(10), child: OrderProductCard());
+                      padding: EdgeInsets.all(10),
+                      child: OrderProductCard(
+                          order: state.orders[index], bloc: orderBloc));
                 });
-            if (state is GetOrderSuccess) {
-              if (state.orders == null || state.orders.length == 0) {
-                return Container(
-                  child: Text("no data"),
-                );
-              }
-              return ListView.builder(
-                  itemCount: state.orders.length,
-                  itemBuilder: (ctx, index) {
-                    return Padding(
-                        padding: EdgeInsets.all(10),
-                        child: OrderProductCard(
-                            order: state.orders[index], bloc: orderBloc));
-                  });
-            } else if (state is GetOrderFail)
-              return Container(
+          } else if (state is GetOrderFail) {
+            return Center(
+              child: Container(
                 child: Text(state.error),
-              );
-            else
-              return Container(
-                child: Center(child: CircularProgressIndicator()),
-              );
-          }),
+              ),
+            );
+          } else if (state is GetOrdersLoading) {
+            return Container(
+              child: Center(child: CircularProgressIndicator()),
+            );
+          } else if (state is GetOrderEmpty) {
+            return Container(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Center(child: Text("You don't have any orders")),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  FlatButton(
+                    color: Colors.orange.shade500.withOpacity(0.8),
+                    child: Text("Add new products?"),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  )
+                ],
+              ),
+            );
+          }
+        },
+      ),
     );
   }
 }

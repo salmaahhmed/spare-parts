@@ -23,9 +23,12 @@ class CategoryProductBloc
 
         List<ParseObject> alreadyAdded =
             await categoryRepository.getSupplierProducts(event.category);
-        List<String> productsAddedOfSelectedCategory =  categoryRepository.getProductsAddedOfSelectedCategory();
+
+        List<String> productsAddedOfSelectedCategory =
+            categoryRepository.getProductsAddedOfSelectedCategory();
         if (products.isNotEmpty) {
-          yield GetCategoryProductSuccess(products, alreadyAdded,productsAddedOfSelectedCategory);
+        
+          yield GetCategoryProductSuccess(products ,productsAddedOfSelectedCategory, alreadyAdded);
         }
       } catch (e) {
         yield GetCategoryProductFail(e.toString());

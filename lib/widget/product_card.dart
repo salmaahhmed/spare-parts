@@ -35,11 +35,16 @@ class _ProductCardState extends State<ProductCard> {
                     ? Container()
                     : Image.network(widget.product.get("product_image")),
                 width: 70,
+                height: 100,
               ),
             ),
-            Text(
-              widget.product.get("name"),
-              style: Theme.of(context).textTheme.button,
+            Container(
+              padding: EdgeInsets.only(left: 10),
+              width: 180,
+                          child: Text(
+                widget.product.get("name"),
+                style: Theme.of(context).textTheme.body1.copyWith(fontSize: 12),
+              ),
             ),
             SizedBox(height: 10),
             Container(
