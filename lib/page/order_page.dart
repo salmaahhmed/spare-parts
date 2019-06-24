@@ -33,10 +33,8 @@ class OrderPage extends StatelessWidget {
                 itemBuilder: (ctx, index) {
                   return Container(
                     decoration: BoxDecoration(
-                      border: Border(
-                        
+                      border: Border(         
                         bottom: BorderSide(
-                         
                           color: Colors.black,
                           width: 3.0,
                         ),

@@ -13,6 +13,7 @@ import 'package:sparepart/data/remote_provider/supplier_api_provider.dart';
 import 'package:sparepart/data/repository/supplier/category_repository_implementation.dart';
 import 'package:sparepart/data/repository/supplier/supplier_repository.dart';
 import 'package:sparepart/page/home_page.dart';
+import 'package:sparepart/page/login/login_form.dart';
 import 'package:sparepart/page/login/login_page.dart';
 
 import 'bloc/order/order_bloc.dart';
@@ -101,9 +102,12 @@ class App extends StatelessWidget {
                   child: Center(child: CircularProgressIndicator()));
             }
             if (state is AuthenticationAuthenticated) {
-              return HomePage(
-                BlocProvider.of<CategoryBloc>(context),
-              );
+              return HomePage(BlocProvider.of<CategoryBloc>(context),
+                  onLogout: () {
+                BlocProvider.of<AuthenticationBloc>(context)
+                  ..dispatch(LoggedOut());
+
+              });
             }
             if (state is AuthenticationUnauthenticated) {
               return LoginPageMain(supplierRepository: supplierRepository);

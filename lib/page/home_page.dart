@@ -14,9 +14,10 @@ import 'package:sparepart/widget/orders_icon_widget.dart';
 
 class HomePage extends StatelessWidget {
   final CategoryBloc categoryBloc;
+  final Function onLogout;
   const HomePage(
     this.categoryBloc, {
-    Key key,
+    Key key, this.onLogout,
   }) : super(key: key);
 
   @override
@@ -42,9 +43,7 @@ class HomePage extends StatelessWidget {
         actions: <Widget>[
           Padding(
               padding: EdgeInsets.only(right: 20),
-              child: InkWell(onTap: (){
-                 BlocProvider.of<AuthenticationBloc>(context)..dispatch(LoggedOut());
-              } ,child: Icon(Icons.exit_to_app))),
+              child: InkWell(onTap:  onLogout ,child: Icon(Icons.exit_to_app))),
         ],
       ),
       body: BlocBuilder<CategoryEvent, CategoryState>(
