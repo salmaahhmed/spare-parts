@@ -9,7 +9,9 @@ import 'package:sparepart/widget/product_card.dart';
 class ProductsPage extends StatelessWidget {
   final ParseObject category;
   final CategoryProductBloc bloc;
+
   const ProductsPage({Key key, this.category, this.bloc}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     final _formKey = GlobalKey<FormState>();
@@ -48,112 +50,119 @@ class ProductsPage extends StatelessWidget {
           bloc: bloc,
           builder: (BuildContext context, CategoryProductState productState) {
             List<ParseObject> productNotAddedFromSparePart = [];
-            if (productState is GetCategoryProductSuccess) {
-                for (var i = 0; i < productState.products.length; i++) {
-                  if(!productState.alreadyAddedProducts.contains(productState.products[i].objectId)){
-                    productNotAddedFromSparePart.add(productState.products[i]);
-                  }
-                }
-            }
             if (productState is GetCategoryProductsLoading) {
               return Center(
                 child: CircularProgressIndicator(),
               );
             } else if (productState is GetCategoryProductSuccess) {
-              return Padding(
-                padding: EdgeInsets.only(
-                  top: 15,
-                ),
-                child: GridView.builder(
-                    shrinkWrap: true,
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2),
-                    itemCount: productNotAddedFromSparePart.length,
-                    itemBuilder: (context, index) {
-                      return ProductCard(
-                        product: productNotAddedFromSparePart[index],
-                        bloc: bloc,
-                        onPressed: () async {
-                          return await showDialog(
-                              context: context,
-                              builder: (ctx) {
-                                return BlocBuilder<CategoryProductsEvent,
-                                    CategoryProductState>(
-                                  bloc: bloc,
-                                  builder: (BuildContext context,
-                                      CategoryProductState state) {
-                                    if (state is AddProductSuccess) {
-                                      Navigator.pop(context);
-                                    }
-                                    if (state is AddProductFail) {
-                                      Navigator.pop(ctx);
-                                    }
-                                    return AlertDialog(
-                                      content: Form(
-                                        key: _formKey,
-                                        child: Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: <Widget>[
-                                            state is AddProductLoading
-                                                ? Center(
-                                                    child:
-                                                        CircularProgressIndicator())
-                                                : Container(),
-                                            Center(
-                                              child: Text("Add product price"),
-                                            ),
-                                            Padding(
-                                              padding: EdgeInsets.all(8.0),
-                                              child: TextFormField(
-                                                keyboardType:
-                                                    TextInputType.number,
-                                                onSaved: (value) => _price =
-                                                    double.parse(value),
-                                                validator: (value) {
-                                                  if (value.length == 0) {
-                                                    return "price cant be empty";
-                                                  }
-                                                },
+              if (productState.products.length ==
+                  productState.alreadyAddedProducts.length) {
+                return Center(
+                  child:
+                  Text("All products are added"),
+                );
+              } else {
+                for (var i = 0; i < productState.products.length; i++) {
+                  if (!productState.alreadyAddedProducts
+                      .contains(productState.products[i].objectId)) {
+                    productNotAddedFromSparePart.add(productState.products[i]);
+                  }
+                }
+                return Padding(
+                  padding: EdgeInsets.only(
+                    top: 15,
+                  ),
+                  child: GridView.builder(
+                      shrinkWrap: true,
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2),
+                      itemCount: productNotAddedFromSparePart.length,
+                      itemBuilder: (context, index) {
+                        return ProductCard(
+                          product: productNotAddedFromSparePart[index],
+                          bloc: bloc,
+                          onPressed: () async {
+                            return await showDialog(
+                                context: context,
+                                builder: (ctx) {
+                                  return BlocBuilder<CategoryProductsEvent,
+                                      CategoryProductState>(
+                                    bloc: bloc,
+                                    builder: (BuildContext context,
+                                        CategoryProductState state) {
+                                      if (state is AddProductSuccess) {
+                                        Navigator.pop(context);
+                                      }
+                                      if (state is AddProductFail) {
+                                        Navigator.pop(ctx);
+                                      }
+                                      return AlertDialog(
+                                        content: Form(
+                                          key: _formKey,
+                                          child: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: <Widget>[
+                                              state is AddProductLoading
+                                                  ? Center(
+                                                      child:
+                                                          CircularProgressIndicator())
+                                                  : Container(),
+                                              Center(
+                                                child:
+                                                    Text("Add product price"),
                                               ),
-                                            ),
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsets.all(8.0),
-                                              child: RaisedButton(
-                                                color: Colors.orange
-                                                    .withOpacity(0.8),
-                                                child: Text("Add product"),
-                                                onPressed: () {
-                                                  if (_formKey.currentState
-                                                      .validate()) {
-                                                    _formKey.currentState
-                                                        .save();
-                                                    bloc.dispatch(
-                                                        AddProductToCategory(
-                                                            productState
-                                                                    .products[
-                                                                index],
-                                                            _price));
-                                                  }
-                                                },
+                                              Padding(
+                                                padding: EdgeInsets.all(8.0),
+                                                child: TextFormField(
+                                                  keyboardType:
+                                                      TextInputType.number,
+                                                  onSaved: (value) => _price =
+                                                      double.parse(value),
+                                                  validator: (value) {
+                                                    if (value.length == 0) {
+                                                      return "price cant be empty";
+                                                    }
+                                                  },
+                                                ),
                                               ),
-                                            )
-                                          ],
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.all(8.0),
+                                                child: RaisedButton(
+                                                  color: Colors.orange
+                                                      .withOpacity(0.8),
+                                                  child: Text("Add product"),
+                                                  onPressed: () {
+                                                    if (_formKey.currentState
+                                                        .validate()) {
+                                                      _formKey.currentState
+                                                          .save();
+                                                      bloc.dispatch(
+                                                          AddProductToCategory(
+                                                                      productNotAddedFromSparePart[
+                                                                  index],
+                                                              _price));
+                                                    }
+                                                  },
+                                                ),
+                                              )
+                                            ],
+                                          ),
                                         ),
-                                      ),
-                                    );
-                                  },
-                                );
-                              });
-                        },
-                      );
-                    }),
-              );
+                                      );
+                                    },
+                                  );
+                                });
+                          },
+                        );
+                      }),
+                );
+              }
             } else if (productState is GetCategoryProductFail) {
               return Center(
                 child: Text(productState.error),
               );
-            } 
+            }
           },
         ),
       ),

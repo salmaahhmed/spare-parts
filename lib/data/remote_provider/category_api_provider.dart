@@ -32,11 +32,13 @@ class CategoryApiProvider {
         getApiResponse(await querySupplierSparePart.query()).results;
     List<ParseObject> productsByCategory= [];
     productsChosen.clear();
+    if(products!=null){
     products.forEach((product){
       if(product.get("spare_part_id").get("spare_part_type_id").objectId==category.objectId)
         productsChosen.add(product.get("spare_part_id").objectId);
         productsByCategory.add(product);
       });
+    }
     return productsByCategory;
   }
   List<String> getCategoriesOfProduct(){
