@@ -1,6 +1,6 @@
 
 const String keyApplicationName = 'sparePart12';
-const String keyParseApplicationId = 'CG43izogj44mHzH9CBP2HJRO3wKNk4xBJBjJ8osK';
-const String keyParseMasterKey = 'EvvVxoTukRz9qLBwDpk7qSyyX64XFcWERxokyxxI';
+const String keyParseApplicationId = '1IO2FtTOJZUm2n9SmzscsqC1PWOyUJgxLV8NQIdO';
+const String keyParseMasterKey = 'cgz6Liubg855fwCUW0ji1ss4ZYRTPS6CHcgtQQSZ';
 const String keyParseServerUrl = 'https://parseapi.back4app.com/';
  
