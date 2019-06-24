@@ -50,7 +50,7 @@ class ProductsPage extends StatelessWidget {
           bloc: bloc,
           builder: (BuildContext context, CategoryProductState productState) {
             List<ParseObject> productNotAddedFromSparePart = [];
-                                      
+
             if (productState is GetCategoryProductsLoading) {
               return Center(
                 child: CircularProgressIndicator(),
@@ -59,8 +59,7 @@ class ProductsPage extends StatelessWidget {
               if (productState.products.length ==
                   productState.alreadyAddedProducts.length) {
                 return Center(
-                  child:
-                  Text("All products are added"),
+                  child: Text("All products are added"),
                 );
               } else {
                 for (var i = 0; i < productState.products.length; i++) {
@@ -92,9 +91,15 @@ class ProductsPage extends StatelessWidget {
                                     builder: (BuildContext context,
                                         CategoryProductState state) {
                                       if (state is AddProductSuccess) {
+                                        bloc
+                                          ..dispatch(
+                                              GetCategoryProducts(category));
                                         Navigator.pop(context);
                                       }
                                       if (state is AddProductFail) {
+                                        bloc
+                                          ..dispatch(
+                                              GetCategoryProducts(category));
                                         Navigator.pop(ctx);
                                       }
                                       return AlertDialog(
@@ -140,7 +145,7 @@ class ProductsPage extends StatelessWidget {
                                                           .save();
                                                       bloc.dispatch(
                                                           AddProductToCategory(
-                                                                      productNotAddedFromSparePart[
+                                                              productNotAddedFromSparePart[
                                                                   index],
                                                               _price));
                                                     }
@@ -164,6 +169,7 @@ class ProductsPage extends StatelessWidget {
                 child: Text(productState.error),
               );
             }
+            return Container();
           },
         ),
       ),

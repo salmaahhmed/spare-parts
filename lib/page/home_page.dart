@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sparepart/bloc/authentication/authentication_bloc.dart';
+import 'package:sparepart/bloc/authentication/authentication_event.dart';
 import 'package:sparepart/bloc/category_products/category_products_bloc.dart';
 import 'package:sparepart/bloc/order/order_bloc.dart';
 import 'package:sparepart/bloc/spare_part_category/category_bloc.dart';
@@ -40,7 +42,9 @@ class HomePage extends StatelessWidget {
         actions: <Widget>[
           Padding(
               padding: EdgeInsets.only(right: 20),
-              child: Icon(Icons.more_vert)),
+              child: InkWell(onTap: (){
+                 BlocProvider.of<AuthenticationBloc>(context)..dispatch(LoggedOut());
+              } ,child: Icon(Icons.exit_to_app))),
         ],
       ),
       body: BlocBuilder<CategoryEvent, CategoryState>(

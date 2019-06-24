@@ -27,8 +27,9 @@ class OrderProductCard extends StatelessWidget {
                       'Product Name: ',
                       textAlign: TextAlign.left,
                       style: Theme.of(context).textTheme.button,
+                      maxLines: 1,
                     ),
-                    Text("${orderss?.get<String>("name") ?? "Orange"}"),
+                    FittedBox(child: Text("${(orderss?.get<String>("name")).toString().substring(0, 9) ?? "Orange"}..")),
                   ],
                 ),
                 Row(
@@ -58,10 +59,10 @@ class OrderProductCard extends StatelessWidget {
           Expanded(
             flex: 2,
             child: Container(
-              width: 50,
               child: FlatButton(
                 onPressed: () {
                   bloc..dispatch(AcceptOrder(order));
+                  bloc..dispatch(GetOrders());
                 },
                 color: Colors.green,
                 child: Container(

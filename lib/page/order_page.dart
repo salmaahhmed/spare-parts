@@ -31,10 +31,22 @@ class OrderPage extends StatelessWidget {
             return ListView.builder(
                 itemCount: state.orders.length,
                 itemBuilder: (ctx, index) {
-                  return Padding(
-                      padding: EdgeInsets.all(10),
-                      child: OrderProductCard(
-                          order: state.orders[index], bloc: orderBloc));
+                  return Container(
+                    decoration: BoxDecoration(
+                      border: Border(
+                        
+                        bottom: BorderSide(
+                         
+                          color: Colors.black,
+                          width: 3.0,
+                        ),
+                      ),
+                    ),
+                    child: Padding(
+                        padding: EdgeInsets.all(10),
+                        child: OrderProductCard(
+                            order: state.orders[index], bloc: orderBloc)),
+                  );
                 });
           } else if (state is GetOrderFail) {
             return Center(
